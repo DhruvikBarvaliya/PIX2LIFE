@@ -7,6 +7,7 @@ const businessRoutes = require('./routes/businessRoutes');
 const imageRoutes = require('./routes/imageRoutes'); // Include image routes
 const setupSwagger = require('./config/swagger'); // Import Swagger setup
 const path = require('path');
+const logger = require('./config/logger');
 require('dotenv').config();
 
 const app = express();
@@ -32,4 +33,4 @@ setupSwagger(app);
 
 const PORT = process.env.PORT || 5000;
 
-app.listen(PORT, () => console.log(`Server started on port ${PORT}`));
+app.listen(PORT, () =>logger.info(`Server started on port ${PORT}`));

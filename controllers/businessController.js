@@ -1,13 +1,12 @@
+const logger = require('../config/logger');
 const Business = require('../models/Business');
 const Project = require('../models/Project');
 const { validationResult } = require('express-validator');
 
-// @desc    Register a new business
-// @route   POST /api/business/register
-// @access  Public
 exports.register = async (req, res) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
+    logger.error('Validation error during business registration');
     return res.status(400).json({ errors: errors.array() });
   }
 
@@ -22,8 +21,10 @@ exports.register = async (req, res) => {
 
     await business.save();
     res.json(business);
+
+    logger.info(`Business registered: ${businessName}`);
   } catch (err) {
-    console.error(err.message);
+    logger.error(`Server error during business registration: ${err.message}`);
     res.status(500).send('Server error');
   }
 };
@@ -37,13 +38,16 @@ exports.getBusinessProjects = async (req, res) => {
 
     const business = await Business.findById(businessId);
     if (!business) {
+      logger.warn(`Business not found: ${businessId}`);
       return res.status(404).json({ msg: 'Business not found' });
     }
 
     const projects = await Project.find({ businessId: businessId });
     res.json(projects);
+
+    logger.info(`Projects retrieved for business: ${businessId}`);
   } catch (err) {
-    console.error(err.message);
+    logger.error(`Server error during retrieving business projects: ${err.message}`);
     res.status(500).send('Server error');
   }
 };

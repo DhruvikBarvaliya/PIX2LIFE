@@ -1,4 +1,5 @@
 const Project = require('../models/Project');
+const logger = require('../config/logger');
 const fs = require('fs');
 const path = require('path');
 
@@ -33,6 +34,7 @@ exports.scanImage = async (req, res) => {
     });
   } catch (err) {
     console.error(err.message);
+    logger.error(`Server error during image scan: ${err.message}`);
     res.status(500).send('Server error');
   }
 };
